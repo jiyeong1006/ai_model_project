@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=redis-datasource  # Redis 플러그인 설치
+    depends_on:
+      - redis
+    volumes:
+      - grafana-data:/var/lib/grafana  # 데이터 지속 저장
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    ports:
+      - "8081:80"
+    depends_on:
+      - redis
+
+volumes:
+  grafana-data:  # Grafana 데이터 보존
